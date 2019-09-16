@@ -98,9 +98,9 @@ import qualified Network.Socket as N
   , SocketOption(ReuseAddr, NoDelay, UserTimeout, KeepAlive)
   , isSupportedSocketOption
   , connect
-  , sOMAXCONN
   , AddrInfo
   , SockAddr(..)
+  , maxListenQueue
   )
 
 #ifdef USE_MOCK_NETWORK
@@ -675,7 +675,7 @@ createTransportExposeInternals addr params = do
 -- | Default TCP parameters
 defaultTCPParameters :: TCPParameters
 defaultTCPParameters = TCPParameters {
-    tcpBacklog         = N.sOMAXCONN
+    tcpBacklog         = N.maxListenQueue
   , tcpReuseServerAddr = True
   , tcpReuseClientAddr = True
   , tcpNoDelay         = False
