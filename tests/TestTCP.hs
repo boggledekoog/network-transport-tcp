@@ -569,16 +569,20 @@ testUnnecessaryConnect numThreads = do
         -- immediately (depending on far the remote endpoint got with the initialization)
         response <- readMVar serverAddr >>= \addr -> socketToEndPoint (Just ourAddress) addr True False False Nothing Nothing
         case response of
-          Right (_, _, ConnectionRequestAccepted) ->
+          Right (_, _, ConnectionRequestAccepted) -> do
             -- We don't close this socket because we want to keep this connection open
+            print "accepted"
             putMVar gotAccepted ()
           -- We might get either Invalid or Crossed (the transport does not
           -- maintain enough history to be able to tell)
-          Right (_, sock, ConnectionRequestInvalid) ->
+          Right (_, sock, ConnectionRequestInvalid) -> do
+            print "invalid"
             N.close sock
-          Right (_, sock, ConnectionRequestCrossed) ->
+          Right (_, sock, ConnectionRequestCrossed) -> do
+            print "crossed"
             N.close sock
-          Left _ ->
+          Left _ -> do
+            print "exception"
             return ()
         putMVar done ()
       return done
